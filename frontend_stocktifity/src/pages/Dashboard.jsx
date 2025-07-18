@@ -38,8 +38,8 @@ const Dashboard = () => {
 
   const refreshToken = async () => {
     try {
-      const token = localStorage.getItem("token");      
-      const response = await axios.get("http://localhost:5000/api/v1/users", {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +61,7 @@ const Dashboard = () => {
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/api/v1/users");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -76,7 +76,7 @@ const Dashboard = () => {
   );
 
   // const getUsers = async () => {
-  //   const response = await axiosJWT.get("http://localhost:5000/api/v1/users", {
+  //   const response = await axiosJWT.get(${process.env.REACT_APP_API_URL}/users", {
   //     headers: {
   //       Authorization: `Bearer ${token}`,
   //     },
@@ -92,7 +92,7 @@ const Dashboard = () => {
   useEffect(() => {
     let fetchSuppliers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/suppliers");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/suppliers`);
         setSuppliers(response.data);
       } catch (error) {
         console.log(error);
@@ -108,7 +108,7 @@ const Dashboard = () => {
   useEffect(() => {
     let fetchDataInbound = async () => {
       try {
-        let result = await axios.get("http://localhost:5000/api/v1/products");
+        let result = await axios.get(`${process.env.REACT_APP_API_URL}/products`);
         setDataInbound(result.data);
       } catch (error) {
         console.log(error.message);
@@ -133,7 +133,7 @@ const Dashboard = () => {
   useEffect(() => {
     let fetchDataOutbound = async () => {
       try {
-        let result = await axios.get("http://localhost:5000/api/v1/outbound-history");
+        let result = await axios.get(`${process.env.REACT_APP_API_URL}/outbound-history`);
         setDataOutbound(result.data);
       } catch (error) {
         console.log(error.message);
@@ -192,7 +192,7 @@ const Dashboard = () => {
   // Sort Table Data Outbound
   const [outboundOrder, outboundSetOrder] = useState("asc");
   const [outboundOrderBy, outboundSetOrderBy] = useState("sku");
-  
+
   const handleRequestSortOutbound = (property) => {
     const isAsc = outboundOrderBy === property && outboundOrder === "asc";
     outboundSetOrder(isAsc ? "desc" : "asc");
@@ -263,154 +263,154 @@ const Dashboard = () => {
 
   return (
     <>
-     {loading ? (
-      <div className="w-full">
-        <header className="flex w-full bg-[#6B728E] border-b-2 p-4">
-          <div className="flex w-full">
-            <h1 className="text-white font-semibold text-sm uppercase">Dashboard</h1>
-          </div>
-        </header>
-
-        <div className="flex">
-          <div className="flex flex-col justify-center w-full min-h-[634px] bg-[#474E68] p-10">
-            {/* Inbound History */}
-            <div className="mb-5 bg-[#ffffff] rounded-lg shadow-lg">
-              {/* Subtitle */}
-              <h2 className="font-bold mt-4 ml-8 text-xl uppercase">Inbound History</h2>
-              <div className="flex items-center">
-                <div className="search ml-8">
-                  <label htmlFor="search" className="text-black">
-                    Search:
-                  </label>
-                  <input
-                    onChange={(e) => setSearchInbound(e.target.value)}
-                    value={searchInbound}
-                    type="search"
-                    id="search"
-                    name="search"
-                    placeholder="Search..."
-                    className="w-1/2 border border-black rounded-lg ml-2 pl-2 shadow-none outline-none focus:outline-none hover:outline-none"
-                  />
-                  {/* <span className="px-2"><SearchSharpIcon/></span> */}
-                </div>
-              </div>
-              <div className="py-2 sm:px-6 lg:px-8">
-                <div className="overflow-auto">
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }}>
-                      <TableHead>
-                        <TableRow>
-                          {columnsInbound.map((column) => (
-                            <TableCell key={column._id} sortDirection={inboundOrderBy === column.id ? inboundOrder : false}>
-                              <TableSortLabel hideSortIcon direction={inboundOrderBy === column.id ? inboundOrder : "asc"} onClick={() => handleRequestSortInbound(column.id)}>
-                                <span className="font-bold">{column.label}</span>
-                              </TableSortLabel>
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {stableSortInbound(dataInbound && filteredDataInbound, getComparatorInbound(inboundOrder, inboundOrderBy), (a, b) => moment(b.date) - moment(a.date))
-                          .slice(pageInbound * rowsPerPageInbound, pageInbound * rowsPerPageInbound + rowsPerPageInbound)
-                          .map((row) => (
-                            <TableRow key={row.id}>
-                              <TableCell>{row.sku}</TableCell>
-                              <TableCell>{row.name}</TableCell>
-                              <TableCell>{row.quantity}</TableCell>
-                              <TableCell>{row.category}</TableCell>
-                              <TableCell>{row.Supplier?.name}</TableCell>
-                              <TableCell>
-                                <span className="font-bold">Updated : </span>
-                                {moment(row.updatedAt).format("DD MMMM YYYY, LT")} <br></br>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </div>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 15]}
-                  component="div"
-                  count={dataInbound.length}
-                  rowsPerPage={rowsPerPageInbound}
-                  page={Math.max(0, Math.min(pageInbound, Math.ceil(dataInbound.length / rowsPerPageInbound) - 1))}
-                  onPageChange={handleChangePageInbound}
-                  onRowsPerPageChange={handleChangeRowsPerPageInbound}
-                />
-              </div>
+      {loading ? (
+        <div className="w-full">
+          <header className="flex w-full bg-[#6B728E] border-b-2 p-4">
+            <div className="flex w-full">
+              <h1 className="text-white font-semibold text-sm uppercase">Dashboard</h1>
             </div>
+          </header>
 
-            {/* Outbound History */}
-            <div className="bg-[#ffffff] rounded-lg shadow-lg">
-              {/* Subtitle */}
-              <h2 className="font-bold mt-4 ml-8 text-xl uppercase">Outbound History</h2>
-              <div className="flex items-center">
-                <div className="search ml-8">
-                  <label htmlFor="search" className="text-black">
-                    Search:
-                  </label>
-                  <input
-                    onChange={(e) => setSearchOutbound(e.target.value)}
-                    value={searchOutbound}
-                    type="search"
-                    id="search"
-                    name="search"
-                    placeholder="Search..."
-                    className="w-1/2 border border-black rounded-lg ml-2 pl-2 shadow-none outline-none focus:outline-none hover:outline-none"
+          <div className="flex">
+            <div className="flex flex-col justify-center w-full min-h-[634px] bg-[#474E68] p-10">
+              {/* Inbound History */}
+              <div className="mb-5 bg-[#ffffff] rounded-lg shadow-lg">
+                {/* Subtitle */}
+                <h2 className="font-bold mt-4 ml-8 text-xl uppercase">Inbound History</h2>
+                <div className="flex items-center">
+                  <div className="search ml-8">
+                    <label htmlFor="search" className="text-black">
+                      Search:
+                    </label>
+                    <input
+                      onChange={(e) => setSearchInbound(e.target.value)}
+                      value={searchInbound}
+                      type="search"
+                      id="search"
+                      name="search"
+                      placeholder="Search..."
+                      className="w-1/2 border border-black rounded-lg ml-2 pl-2 shadow-none outline-none focus:outline-none hover:outline-none"
+                    />
+                    {/* <span className="px-2"><SearchSharpIcon/></span> */}
+                  </div>
+                </div>
+                <div className="py-2 sm:px-6 lg:px-8">
+                  <div className="overflow-auto">
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 650 }}>
+                        <TableHead>
+                          <TableRow>
+                            {columnsInbound.map((column) => (
+                              <TableCell key={column._id} sortDirection={inboundOrderBy === column.id ? inboundOrder : false}>
+                                <TableSortLabel hideSortIcon direction={inboundOrderBy === column.id ? inboundOrder : "asc"} onClick={() => handleRequestSortInbound(column.id)}>
+                                  <span className="font-bold">{column.label}</span>
+                                </TableSortLabel>
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {stableSortInbound(dataInbound && filteredDataInbound, getComparatorInbound(inboundOrder, inboundOrderBy), (a, b) => moment(b.date) - moment(a.date))
+                            .slice(pageInbound * rowsPerPageInbound, pageInbound * rowsPerPageInbound + rowsPerPageInbound)
+                            .map((row) => (
+                              <TableRow key={row.id}>
+                                <TableCell>{row.sku}</TableCell>
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>{row.quantity}</TableCell>
+                                <TableCell>{row.category}</TableCell>
+                                <TableCell>{row.Supplier?.name}</TableCell>
+                                <TableCell>
+                                  <span className="font-bold">Updated : </span>
+                                  {moment(row.updatedAt).format("DD MMMM YYYY, LT")} <br></br>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 15]}
+                    component="div"
+                    count={dataInbound.length}
+                    rowsPerPage={rowsPerPageInbound}
+                    page={Math.max(0, Math.min(pageInbound, Math.ceil(dataInbound.length / rowsPerPageInbound) - 1))}
+                    onPageChange={handleChangePageInbound}
+                    onRowsPerPageChange={handleChangeRowsPerPageInbound}
                   />
                 </div>
               </div>
-              <div className="py-2 sm:px-6 lg:px-8">
-                <div className="overflow-auto">
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }}>
-                      <TableHead>
-                        <TableRow>
-                        {columnsOutbound.map((column) => (
-                            <TableCell key={column._id} sortDirection={outboundOrderBy === column.id ? outboundOrder : false}>
-                              <TableSortLabel hideSortIcon direction={outboundOrderBy === column.id ? outboundOrder : "asc"} onClick={() => handleRequestSortOutbound(column.id)}>
-                                <span className="font-bold">{column.label}</span>
-                              </TableSortLabel>
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {stableSortOutbound(dataOutbound && filteredDataOutbound, getComparatorOutbound(outboundOrder, outboundOrderBy), (a, b) => moment(b.date) - moment(a.date))
-                          .slice(pageOutbound * rowsPerPageOutbound, pageOutbound * rowsPerPageOutbound + rowsPerPageOutbound)
-                          .map((row) => (
-                            <TableRow key={row.id}>
-                              <TableCell>{row.product.sku}</TableCell>
-                              <TableCell>{row.product.name}</TableCell>
-                              <TableCell>{row.quantity}</TableCell>
-                              <TableCell>{row.product.category}</TableCell>
-                              <TableCell>{row.product.supplierId?.name}</TableCell>
-                              <TableCell>
-                                <span className="font-bold">Created : </span>
-                                {moment(row.date).format("DD MMMM YYYY, LT")} <br></br>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+
+              {/* Outbound History */}
+              <div className="bg-[#ffffff] rounded-lg shadow-lg">
+                {/* Subtitle */}
+                <h2 className="font-bold mt-4 ml-8 text-xl uppercase">Outbound History</h2>
+                <div className="flex items-center">
+                  <div className="search ml-8">
+                    <label htmlFor="search" className="text-black">
+                      Search:
+                    </label>
+                    <input
+                      onChange={(e) => setSearchOutbound(e.target.value)}
+                      value={searchOutbound}
+                      type="search"
+                      id="search"
+                      name="search"
+                      placeholder="Search..."
+                      className="w-1/2 border border-black rounded-lg ml-2 pl-2 shadow-none outline-none focus:outline-none hover:outline-none"
+                    />
+                  </div>
                 </div>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 15]}
-                  component="div"
-                  count={dataOutbound.length}
-                  rowsPerPage={rowsPerPageOutbound}
-                  page={Math.max(0, Math.min(pageOutbound, Math.ceil(dataOutbound.length / rowsPerPageOutbound) - 1))}
-                  onPageChange={handleChangePageOutbound}
-                  onRowsPerPageChange={handleChangeRowsPerPageOutbound}
-                />
+                <div className="py-2 sm:px-6 lg:px-8">
+                  <div className="overflow-auto">
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 650 }}>
+                        <TableHead>
+                          <TableRow>
+                            {columnsOutbound.map((column) => (
+                              <TableCell key={column._id} sortDirection={outboundOrderBy === column.id ? outboundOrder : false}>
+                                <TableSortLabel hideSortIcon direction={outboundOrderBy === column.id ? outboundOrder : "asc"} onClick={() => handleRequestSortOutbound(column.id)}>
+                                  <span className="font-bold">{column.label}</span>
+                                </TableSortLabel>
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {stableSortOutbound(dataOutbound && filteredDataOutbound, getComparatorOutbound(outboundOrder, outboundOrderBy), (a, b) => moment(b.date) - moment(a.date))
+                            .slice(pageOutbound * rowsPerPageOutbound, pageOutbound * rowsPerPageOutbound + rowsPerPageOutbound)
+                            .map((row) => (
+                              <TableRow key={row.id}>
+                                <TableCell>{row.product.sku}</TableCell>
+                                <TableCell>{row.product.name}</TableCell>
+                                <TableCell>{row.quantity}</TableCell>
+                                <TableCell>{row.product.category}</TableCell>
+                                <TableCell>{row.product.supplierId?.name}</TableCell>
+                                <TableCell>
+                                  <span className="font-bold">Created : </span>
+                                  {moment(row.date).format("DD MMMM YYYY, LT")} <br></br>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 15]}
+                    component="div"
+                    count={dataOutbound.length}
+                    rowsPerPage={rowsPerPageOutbound}
+                    page={Math.max(0, Math.min(pageOutbound, Math.ceil(dataOutbound.length / rowsPerPageOutbound) - 1))}
+                    onPageChange={handleChangePageOutbound}
+                    onRowsPerPageChange={handleChangeRowsPerPageOutbound}
+                  />
+                </div>
               </div>
             </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
       ) : (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
           <CircularProgress />

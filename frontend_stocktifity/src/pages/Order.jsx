@@ -97,7 +97,7 @@ const Order = () => {
   const refreshToken = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/v1/users", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +119,7 @@ const Order = () => {
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/api/v1/users");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -136,7 +136,7 @@ const Order = () => {
   useEffect(() => {
     let fetchDataPending = async () => {
       try {
-        let result = await axios.get("http://localhost:5000/api/v1/pending");
+        let result = await axios.get(`${process.env.REACT_APP_API_URL}/pending`);
         setDataPending(result.data.pendingProducts);
       } catch (error) {
         console.log(error);
@@ -152,7 +152,7 @@ const Order = () => {
   useEffect(() => {
     let fetchDataProducts = async () => {
       try {
-        let result = await axios.get("http://localhost:5000/api/v1/products");
+        let result = await axios.get("${process.env.REACT_APP_API_URL}/products");
         setDataProducts(result.data);
       } catch (error) {
         console.log(error);
@@ -168,7 +168,7 @@ const Order = () => {
   useEffect(() => {
     let fetchSuppliers = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/v1/suppliers");
+        const { data } = await axios.get("${process.env.REACT_APP_API_URL}/suppliers");
         setSuppliers(data);
       } catch (error) {
         console.log(error);
@@ -341,11 +341,13 @@ const Order = () => {
                           required
                         >
                           <option value="">-- Select sku --</option>
-                          {dataProducts.sort((a, b) => a.sku.localeCompare(b.sku)).map((product) => (
-                            <option key={product._id} value={product.sku}>
-                              {product.sku}
-                            </option>
-                          ))}
+                          {dataProducts
+                            .sort((a, b) => a.sku.localeCompare(b.sku))
+                            .map((product) => (
+                              <option key={product._id} value={product.sku}>
+                                {product.sku}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>

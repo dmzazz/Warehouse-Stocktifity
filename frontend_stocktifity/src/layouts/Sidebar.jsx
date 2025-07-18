@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   const Logout = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/v1/logout");
+      await axios.delete("process.env.REACT_APP_API_URL/logout");
       swal({
         title: "Are you sure?",
         text: "You want to Logout?",

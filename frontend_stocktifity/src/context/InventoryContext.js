@@ -71,7 +71,7 @@ export const InventoryProvider = (props) => {
 
       if (currentId === -1) {
         // Create Data
-        const result = await axios.post("http://localhost:5000/api/v1/products", { name, quantity, sku, category, Supplier: supplierId });
+        const result = await axios.post(`${process.env.REACT_APP_API_URL}/products`, { name, quantity, sku, category, Supplier: supplierId });
         setFetchStatus(true);
         setSuccess(result.data.message);
         setTimeout(() => {
@@ -79,7 +79,7 @@ export const InventoryProvider = (props) => {
         }, 4000);
       } else {
         // Update Data
-        const result = await axios.put(`http://localhost:5000/api/v1/products/${currentId}`, { name, quantity, sku, category, Supplier: supplierId });
+        const result = await axios.put(`${process.env.REACT_APP_API_URL}/products/${currentId}`, { name, quantity, sku, category, Supplier: supplierId });
         setFetchStatus(true);
         setSuccess(result.data.message);
         setTimeout(() => {
@@ -129,7 +129,7 @@ export const InventoryProvider = (props) => {
     console.log(_id);
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/v1/products/${_id}`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/products/${_id}`);
       setShowModal(true);
       setEdit(true);
       setCurrentId(res.data._id);
@@ -142,7 +142,7 @@ export const InventoryProvider = (props) => {
   // Handling Delete
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/products/${_id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/products/${_id}`);
       swal({
         title: "Are you sure?",
         text: "You want to delete this item? this process cannot be undone",

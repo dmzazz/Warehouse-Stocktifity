@@ -68,7 +68,7 @@ export const SupplierProvider = (props) => {
     try {
       if (currentId === -1) {
         // Create Data
-        const result = await axios.post("http://localhost:5000/api/v1/suppliers", { name, email, phone, address });
+        const result = await axios.post(`${process.env.REACT_APP_API_URL}/suppliers`, { name, email, phone, address });
         setFetchStatus(true);
         setSuccess(result.data.message);
         setTimeout(() => {
@@ -76,7 +76,7 @@ export const SupplierProvider = (props) => {
         }, 4000);
       } else {
         // Update Data
-        const result = await axios.put(`http://localhost:5000/api/v1/suppliers/${currentId}`, { name, email, phone, address });
+        const result = await axios.put(`${process.env.REACT_APP_API_URL}/suppliers/${currentId}`, { name, email, phone, address });
         setFetchStatus(true);
         setSuccess(result.data.message);
         setTimeout(() => {
@@ -108,7 +108,7 @@ export const SupplierProvider = (props) => {
   };
 
   // Handling Edit
-  const [edit,setEdit] = useState(false)
+  const [edit, setEdit] = useState(false);
 
   const handleCreate = () => {
     setShowModal(true);
@@ -126,7 +126,7 @@ export const SupplierProvider = (props) => {
     console.log(_idData);
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/v1/suppliers/${_idData}`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/suppliers/${_idData}`);
       setShowModal(true);
       setCurrentId(res.data._id);
       setInput({ ...input, name: res.data.name, email: res.data.email, phone: res.data.phone, address: res.data.address });
@@ -138,7 +138,7 @@ export const SupplierProvider = (props) => {
   // Handling Delete
   const handleDelete = async (_idData) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/suppliers/${_idData}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/suppliers/${_idData}`);
       swal({
         title: "Are you sure?",
         text: "You want to delete this item? this process cannot be undone",
@@ -157,39 +157,39 @@ export const SupplierProvider = (props) => {
     } catch {}
   };
 
-    // Sort table data
-    const [order, setOrder] = useState("asc");
-    const [orderBy, setOrderBy] = useState("sku");
+  // Sort table data
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("sku");
 
-    const handleRequestSort = (property) => {
-      const isAsc = orderBy === property && order === "asc";
-      setOrder(isAsc ? "desc" : "asc");
-      setOrderBy(property);
-    };
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
-    const getComparator = (order, orderBy) => {
-      return order === "desc" ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-    };
+  const getComparator = (order, orderBy) => {
+    return order === "desc" ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+  };
 
-    const descendingComparator = (a, b, orderBy) => {
-      if (b[orderBy] < a[orderBy]) {
-        return -1;
-      }
-      if (b[orderBy] > a[orderBy]) {
-        return 1;
-      }
-      return 0;
-    };
+  const descendingComparator = (a, b, orderBy) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  };
 
-    const stableSort = (array, comparator) => {
-      const stabilizedThis = array.map((el, index) => [el, index]);
-      stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-      });
-      return stabilizedThis.map((el) => el[0]);
-    };
+  const stableSort = (array, comparator) => {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  };
 
   // Table Pagination
   const [page, setPage] = useState(0);

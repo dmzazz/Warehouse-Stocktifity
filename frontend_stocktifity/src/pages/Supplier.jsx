@@ -87,7 +87,7 @@ const Supplier = () => {
   const refreshToken = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/v1/users", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -109,7 +109,7 @@ const Supplier = () => {
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/api/v1/users");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -126,9 +126,9 @@ const Supplier = () => {
   useEffect(() => {
     let fetchData = async () => {
       try {
-        let result = await axios.get("http://localhost:5000/api/v1/suppliers");
+        let result = await axios.get(`${process.env.REACT_APP_API_URL}/suppliers`);
         setData(result.data);
-        console.log(result.data)
+        console.log(result.data);
       } catch (error) {
         console.log(error);
       }
@@ -258,7 +258,7 @@ const Supplier = () => {
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-          <div className="absolute top-5 right-5">{success && <Alert severity="success">{success}</Alert>}</div>
+            <div className="absolute top-5 right-5">{success && <Alert severity="success">{success}</Alert>}</div>
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
 

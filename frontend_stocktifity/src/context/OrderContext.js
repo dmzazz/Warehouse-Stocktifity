@@ -52,7 +52,7 @@ export const OrderProvider = (props) => {
   const handleSelect = (event) => {
     let sku = event.target.value;
     let selectedProduct = dataProducts.find((product) => product.sku === sku);
-    setInput({...selectedProduct, quantity: 0});
+    setInput({ ...selectedProduct, quantity: 0 });
   };
 
   // Handling Submit
@@ -66,7 +66,7 @@ export const OrderProvider = (props) => {
 
       if (currentId === -1) {
         // Create Data
-        const result = await axios.post("http://localhost:5000/api/v1/pending", { name, quantity, sku, category, Supplier: supplierId || input.Supplier });
+        const result = await axios.post(`${process.env.REACT_APP_API_URL}/pending`, { name, quantity, sku, category, Supplier: supplierId || input.Supplier });
         setFetchStatus(true);
         setSuccess("Success Create");
         setTimeout(() => {
@@ -96,11 +96,11 @@ export const OrderProvider = (props) => {
   // Handling Confirm
   const handleConfirm = async (_id) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/v1/outbond/${_id}`);
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/outbond/${_id}`);
       setFetchStatus(true);
       setSuccess(response.data);
       setTimeout(() => {
-        window.location.reload()
+        window.location.reload();
         setSuccess(null);
       }, 2000);
     } catch (error) {
@@ -116,7 +116,7 @@ export const OrderProvider = (props) => {
   // Handling Delete
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/pending/${_id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/pending/${_id}`);
       swal({
         title: "Are you sure?",
         text: "You want to delete this item? this process cannot be undone",

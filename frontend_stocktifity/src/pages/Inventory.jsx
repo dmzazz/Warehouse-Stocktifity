@@ -82,7 +82,7 @@ const Inventory = () => {
   const refreshToken = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/v1/users", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -104,7 +104,7 @@ const Inventory = () => {
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/api/v1/users");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -121,7 +121,7 @@ const Inventory = () => {
   useEffect(() => {
     let fetchData = async () => {
       try {
-        let result = await axios.get("http://localhost:5000/api/v1/products");
+        let result = await axios.get(`${process.env.REACT_APP_API_URL}/products`);
         setData(result.data);
       } catch (error) {
         console.log(error);
@@ -130,7 +130,7 @@ const Inventory = () => {
 
     let fetchSuppliers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/suppliers");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/suppliers`);
         setSuppliers(response.data);
       } catch (error) {
         console.log(error);

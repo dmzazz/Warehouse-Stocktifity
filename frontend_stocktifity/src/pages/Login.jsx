@@ -36,7 +36,7 @@ const Login = () => {
   const refreshToken = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/v1/users", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,7 +64,7 @@ const Login = () => {
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/api/v1/users");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -80,7 +80,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/login", { email, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, { email, password });
       localStorage.setItem("token", response.data.accessToken);
       setSuccess("Login Success");
 
