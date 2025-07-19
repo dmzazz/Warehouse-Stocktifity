@@ -22,7 +22,7 @@ const App = () => {
         <InventoryProvider>
           <SupplierProvider>
             <Routes>
-              <Route path="Login" element={<Login />} />
+              <Route path="login" element={<Login />} />
 
               <Route
                 path="/"
@@ -30,11 +30,11 @@ const App = () => {
                 children={
                   <>
                     <Route path="/" element={<Dashboard />} />
-                    <Route path="Dashboard" element={<Dashboard />} />
-                    <Route path="Inventory" element={<Inventory />} />
-                    <Route path="Order" element={<Order />} />
-                    <Route path="Supplier" element={<Supplier />} />
-                    <Route path="Header" element={<Header/>}/>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="inventory" element={<Inventory />} />
+                    <Route path="order" element={<Order />} />
+                    <Route path="supplier" element={<Supplier />} />
+                    <Route path="header" element={<Header />} />
                   </>
                 }
               />

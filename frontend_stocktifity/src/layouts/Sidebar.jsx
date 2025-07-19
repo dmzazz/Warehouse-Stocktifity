@@ -38,7 +38,7 @@ const Sidebar = () => {
             timer: 500,
           });
           setTimeout(() => {
-            navigate("/Login");
+            navigate("/login");
           }, 2000);
         }
       });
@@ -51,22 +51,22 @@ const Sidebar = () => {
   const toggle = () => setOpen(!isOpen);
   const menuItem = [
     {
-      path: "/Dashboard",
+      path: "/dashboard",
       name: "Dashboard",
       icon: <RxDashboard size={22} />,
     },
     {
-      path: "/Inventory",
+      path: "/inventory",
       name: "Inventory",
       icon: <HiCurrencyDollar size={22} />,
     },
     {
-      path: "/Order",
+      path: "/order",
       name: "Order",
       icon: <MdOutlineInventory2 size={22} />,
     },
     {
-      path: "/Supplier",
+      path: "/supplier",
       name: "Supplier",
       icon: <GiForklift />,
     },

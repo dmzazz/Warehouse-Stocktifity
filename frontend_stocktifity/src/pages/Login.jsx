@@ -51,7 +51,7 @@ const Login = () => {
     } catch (error) {
       setTimeout(() => {
         setLoading(true);
-        navigate("/Login");
+        navigate("/login");
       }, 2000);
       // if (error.response) {
       // }
