@@ -1,57 +1,23 @@
-import React, { useState } from "react";
-
-const data = [
-  "Apple",
-  "Banana",
-  "Cherry",
-  "Durian",
-  "Elderberry",
-  "Fig",
-  "Grape",
-  "Honeydew",
-  "Jackfruit",
-  "Kiwi",
-];
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  let location = useLocation();
 
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    const results = data.filter((item) =>
-      item.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setSearchResults(results);
-  };
-
-  const handleClick = (result) => {
-    setSearchTerm(result);
-    setSearchResults([]);
-  };
+  // Extract the last part of the path to use as the title
+  const pathname = location.pathname;
+  // Split the path by '/' and get the last part
+  const pathnameParts = pathname.split("/");
+  // If the path ends with a slash, the last part will be empty, so we handle that
+  const lastPart = pathnameParts[pathnameParts.length - 1];
+  // If the last part is empty, we take the second last part
+  const title = lastPart.charAt(0).toUpperCase() + lastPart.slice(1);
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search"
-        value={searchTerm}
-        onChange={handleChange}
-      />
-      {searchResults.length < 5 && (
-        <ul>
-          {searchResults.map((result, index) => (
-            <li key={index} onClick={() => handleClick(result)}>
-              {result}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {data.map((result) => (
-        <li>{result}</li>
-      ))}
-    </div>
+    <header className="flex w-full bg-[#6B728E] border-b-2 p-4">
+      <div className="flex w-full">
+        <h1 className="text-white font-semibold text-sm">{title}</h1>
+      </div>
+    </header>
   );
 };
 
