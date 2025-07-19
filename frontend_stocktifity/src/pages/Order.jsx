@@ -200,16 +200,6 @@ const Order = () => {
   return (
     <>
       <section className="w-full">
-        {/* header */}
-
-        <header className="flex w-full bg-[#6B728E] border-b-2 p-4">
-          <div className="flex w-full">
-            <h1 className="text-white font-semibold text-sm">Order</h1>
-          </div>
-        </header>
-
-        {/* main */}
-
         <div className="flex">
           <div className="flex justify-center w-full min-h-[634px] bg-[#474E68] p-10">
             <div className="w-full sm:-mx-6 lg:-mx-8 bg-[#ffffff] rounded-lg shadow-lg">

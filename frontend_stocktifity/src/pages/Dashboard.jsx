@@ -264,13 +264,7 @@ const Dashboard = () => {
   return (
     <>
       {loading ? (
-        <div className="w-full">
-          {/* <header className="flex w-full bg-[#6B728E] border-b-2 p-4">
-            <div className="flex w-full">
-              <h1 className="text-white font-semibold text-sm uppercase">Dashboard</h1>
-            </div>
-          </header> */}
-
+        <section className="w-full">
           <div className="flex">
             <div className="flex flex-col justify-center w-full min-h-[634px] bg-[#474E68] p-10">
               {/* Inbound History */}
@@ -410,7 +404,7 @@ const Dashboard = () => {
             </div>
           </div>
           <Footer />
-        </div>
+        </section>
       ) : (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
           <CircularProgress />
