@@ -13,6 +13,8 @@ import Sidebar from "./layouts/Sidebar";
 import { InventoryProvider } from "./context/InventoryContext";
 import { SupplierProvider } from "./context/SupplierContext";
 import { OrderProvider } from "./context/OrderContext";
+
+// Import Header from "./layouts/Header";
 import Header from "./layouts/Header";
 
 const App = () => {
